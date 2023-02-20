@@ -1,5 +1,12 @@
 import './globals.css'
 
+import { Ubuntu } from '@next/font/google'
+
+const ubuntu = Ubuntu({
+  weight: '400',
+  subsets: ['latin'],
+})
+
 export default function RootLayout({
   children,
 }: {
@@ -7,12 +14,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      {/*
-        <head /> will contain the components returned by the nearest parent
-        head.tsx. Find out more at https://beta.nextjs.org/docs/api-reference/file-conventions/head
-      */}
       <head />
-      <body>{children}</body>
+      <body className={ubuntu.className} >{children}</body>
     </html>
   )
 }
