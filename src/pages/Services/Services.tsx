@@ -7,13 +7,13 @@ import { TbBrandReactNative } from "react-icons/tb";
 import { IconType } from "react-icons";
 
 export default function Services() {
-  const [expandedExperience, setExpandedExperience] = useState<number | null>(null);
+  const [expandedExperiences, setExpandedExperiences] = useState<number[]>([0, 1, 2, 3]); // Todos os índices expandidos por padrão
 
   const toggleExpand = (index: number) => {
-    if (expandedExperience === index) {
-      setExpandedExperience(null);
+    if (expandedExperiences.includes(index)) {
+      setExpandedExperiences(expandedExperiences.filter(i => i !== index));
     } else {
-      setExpandedExperience(index);
+      setExpandedExperiences([...expandedExperiences, index]);
     }
   };
 
@@ -35,8 +35,8 @@ export default function Services() {
       role: "Tech Lead",
       description: "Na Bankme, fui promovido a Tech Lead após demonstrar empenho no produto de crédito e eficiência operacional, além de minha capacidade de liderança. Tive o privilégio de montar e liderar duas squads, garantindo a eficiência das entregas e recebendo feedbacks positivos da liderança sobre meu desempenho. Além de evoluir tecnicamente, desenvolvi habilidades essenciais como gestão de equipe, tomada de decisão sob pressão, alinhamento de prazos e expectativas com stakeholders. Essa experiência consolidou minha paixão por liderança técnica e aprimorou minha visão estratégica no desenvolvimento de produtos.",
       descriptionEn: "At Bankme, I was promoted to Tech Lead after demonstrating commitment to the credit product and operational efficiency, as well as my leadership capabilities. I had the privilege of building and leading two squads, ensuring delivery efficiency and receiving positive feedback from leadership about my performance. Beyond technical growth, I developed essential skills such as team management, decision-making under pressure, and aligning deadlines and expectations with stakeholders. This experience consolidated my passion for technical leadership and enhanced my strategic vision in product development.",
-      technologies: ["React", "NestJS", "MySQL"],
-      techIcons: [FaReact, SiNestjs, SiMysql] as IconType[],
+      technologies: ["Angular", "NestJS", "AWS", "Docker", "RabbitMQ"],
+      techIcons: [FaAngular, SiNestjs, FaAws, FaDocker, SiRabbitmq] as IconType[],
       techColors: ["bg-cyan-100 text-cyan-600 dark:bg-cyan-900 dark:text-cyan-300", "bg-red-100 text-red-600 dark:bg-red-900 dark:text-red-300", "bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300"],
       color: "from-purple-500 to-indigo-500"
     },
@@ -147,7 +147,7 @@ export default function Services() {
                     border-l-4 bg-gradient-to-r ${company.companyColor} border-opacity-50
                     cursor-pointer
                   `}
-                  onClick={() => expandedExperience === companyIndex ? setExpandedExperience(null) : setExpandedExperience(companyIndex)}
+                  onClick={() => toggleExpand(companyIndex)}
                 >
                   <div className="flex justify-between items-center">
                     <h2 className="text-2xl font-medium flex items-center">
@@ -155,14 +155,14 @@ export default function Services() {
                       {company.companyName}
                     </h2>
                     <span className="text-sm font-medium text-pink-hover">
-                      {expandedExperience === companyIndex ? 'Recolher' : 'Expandir'}
+                      {expandedExperiences.includes(companyIndex) ? 'Recolher' : 'Expandir'}
                     </span>
                   </div>
 
                   <div 
                     className={`
                       overflow-hidden transition-all duration-300 mt-4
-                      ${expandedExperience === companyIndex ? 'max-h-[2000px]' : 'max-h-0'}
+                      ${expandedExperiences.includes(companyIndex) ? 'max-h-[2000px]' : 'max-h-0'}
                     `}
                   >
                     <div className="space-y-8">
