@@ -39,7 +39,7 @@ export default function Land() {
                   bg-gradient-to-r from-pink to-light-orange 
                   hover:bg-gradient-to-r hover:from-pink-hover hover:to-light-orange-hover
                 " >
-                <span className="text-black text-sm font-semibold" >LET'S TALK</span>
+                <a href="https://wa.me/5543991312390" className="text-black text-sm font-semibold">LET'S TALK</a>
               </button>
 
               <button 
