@@ -11,4 +11,9 @@
   html {
     scroll-behavior: smooth;
   }
+
+  /* Prevenção do flash inicial de tema indesejado */
+  html.dark {
+    color-scheme: dark;
+  }
 }

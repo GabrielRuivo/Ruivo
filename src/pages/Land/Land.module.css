@@ -1,7 +1,10 @@
 .trapezoid {
-  width: 500px;
+  width: 600px;
   height: 600px;
   background-image: url('../../assets/me-3.jpeg');
   background-size: cover;
-  clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%);
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 10%;
+  /* clip-path: polygon(15% 0, 100% 0, 85% 100%, 0 100%); */
 }

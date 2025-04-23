@@ -1,3 +1,4 @@
+"use client";
 
 import Angular from '../../assets/angular.svg';
 import AWS from '../../assets/aws.svg';
@@ -31,8 +32,11 @@ export default function Experiences() {
             h-20 
             whitespace-nowrap
             bg-bg-primary 
+            dark:bg-bg-primary-dark
             shadow-2xl
             overflow-hidden
+            transition-colors 
+            duration-200
           ">
             <div 
               className="
@@ -41,6 +45,7 @@ export default function Experiences() {
                 whitespace-nowrap
                 aria-hidden
                 gap-x-24
+                dark:text-text-primary-dark
               "
             >       
 

@@ -1,9 +1,9 @@
-
 import styles from './Land.module.css';
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
 
 export default function Land() {
   return (
-      <div id="first-section" className="flex flex-col w-full items-center justify-center h-screen bg-primary">
+      <div id="first-section" className="flex flex-col w-full items-center justify-center h-screen bg-primary dark:bg-bg-primary-dark dark:text-text-primary-dark transition-colors duration-200">
         <div className='flex max-w-7xl'>
           <div className="flex flex-col justify-center w-1/2 pl-20">
             <div className="text-5xl font-semibold">
@@ -27,7 +27,7 @@ export default function Land() {
             </div>
 
             <div className="text-base font-thin opacity-70 my-8">
-              I am a software engineer tech lead with experience of 3 years in this 3 years I have worked in a software house and actual in a fintech.
+              I am a software engineer tech lead with experience of 5 years in this 5 years I have worked in a software house and actual in a fintech.
             </div>
 
             <div className="flex gap-x-4">
@@ -39,7 +39,7 @@ export default function Land() {
                   bg-gradient-to-r from-pink to-light-orange 
                   hover:bg-gradient-to-r hover:from-pink-hover hover:to-light-orange-hover
                 " >
-                <span className="text-black text-sm font-semibold" >GET IN TOUCH</span>
+                <span className="text-black text-sm font-semibold" >LET'S TALK</span>
               </button>
 
               <button 
@@ -49,9 +49,15 @@ export default function Land() {
                   rounded-3xl 
                   border	
                   hover:bg-bg-primary
+                  dark:hover:bg-bg-secondary-dark
+                  dark:text-white
+                  transition-colors
+                  duration-200
                 " >
-                  <a className="text-black text-sm font-semibold" href="#third-section">VIEW ALL WORKS</a>
+                  <a className="text-black dark:text-white text-sm font-semibold transition-colors duration-200" href="#third-section">VIEW ALL WORKS</a>
               </button>
+
+              <ThemeToggle />
             </div>
           </div>
 
