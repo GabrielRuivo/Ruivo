@@ -213,10 +213,10 @@ export default function Services() {
                               pt-4 border-t dark:border-gray-800
                             `}>
                               <p className="text-base font-thin opacity-70">
-                                {experience.description}
+                                🇧🇷 {experience.description}
                               </p>
                               <p className="text-base font-thin opacity-70 mt-4 border-t dark:border-gray-800 pt-4">
-                                {experience.descriptionEn}
+                                🇺🇸 {experience.descriptionEn}
                               </p>
                             </div>
                           </div>
