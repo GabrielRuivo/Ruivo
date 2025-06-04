@@ -1,13 +1,354 @@
 'use client'
 
 import React, { useState } from 'react'
+import { motion, useScroll, AnimatePresence } from 'framer-motion'
+import { useInView } from 'react-intersection-observer'
 import { FaReact, FaAngular, FaAws, FaDocker, FaNodeJs, FaCalendar, FaBriefcase } from 'react-icons/fa'
 import { SiNestjs, SiMysql, SiDotnet, SiRabbitmq, SiTypescript, SiTailwindcss } from 'react-icons/si'
 import { TbBrandReactNative } from 'react-icons/tb'
 import type { IconType } from 'react-icons'
 
+// Novas definições das interfaces
+interface ExperienceItem {
+  company: string
+  period: string
+  role: string
+  website: string
+  description: string
+  descriptionEn: string
+  technologies: string[]
+  techIcons: IconType[]
+  techColors: string[]
+  color: string
+}
+
+interface GroupedCompany {
+  companyName: string
+  companyColor: string // Adicionado
+  companyWebsite: string
+  experiences: ExperienceItem[]
+}
+
+// Componente de partículas técnicas
+const TechParticle = ({ delay = 0, icon: Icon }: { delay?: number, icon: IconType }) => {
+  return (
+    <motion.div
+      className="absolute opacity-10"
+      style={{
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`
+      }}
+      animate={{
+        y: [0, -50, 0],
+        x: [0, Math.random() * 30 - 15, 0],
+        rotate: [0, 360],
+        scale: [0.8, 1.2, 0.8]
+      }}
+      transition={{
+        duration: 8 + Math.random() * 4,
+        repeat: Infinity,
+        delay,
+        ease: 'easeInOut'
+      }}
+    >
+      {React.createElement(Icon as any, { className: 'w-6 h-6 text-pink-hover' })}
+    </motion.div>
+  )
+}
+
+// Componente de linha do tempo animada
+const TimelineConnector = ({ isVisible }: { isVisible: boolean }) => {
+  return (
+    <motion.div
+      className="absolute left-8 w-px bg-gradient-to-b from-pink-hover to-light-orange-hover"
+      initial={{ height: 0, opacity: 0 }}
+      animate={isVisible ? { height: '100%', opacity: 1 } : { height: 0, opacity: 0 }}
+      transition={{ duration: 1.5, ease: 'easeInOut' }}
+    />
+  )
+}
+
+// Componente de card de experiência
+const ExperienceCard = ({
+  company,
+  companyIndex,
+  isExpanded,
+  onToggle
+}: {
+  company: GroupedCompany
+  companyIndex: number
+  isExpanded: boolean
+  onToggle: () => void
+}) => {
+  const [ref, inView] = useInView({
+    threshold: 0.2,
+    triggerOnce: true
+  })
+
+  const cardVariants = {
+    hidden: {
+      opacity: 0,
+      x: -100,
+      scale: 0.8
+    },
+    visible: {
+      opacity: 1,
+      x: 0,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+        delay: companyIndex * 0.2
+      }
+    }
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      className="relative md:pl-20"
+      variants={cardVariants}
+      initial="hidden"
+      animate={inView ? 'visible' : 'hidden'}
+    >
+      {/* Marcador da empresa na linha do tempo */}
+      <motion.div
+        className="hidden md:block absolute left-6 top-6 w-5 h-5 rounded-full bg-gradient-to-r from-pink-hover to-light-orange-hover z-10"
+        whileHover={{ scale: 1.3 }}
+        animate={inView
+          ? {
+              boxShadow: [
+                '0 0 0 0 rgba(135, 0, 255, 0.4)',
+                '0 0 0 10px rgba(135, 0, 255, 0)',
+                '0 0 0 0 rgba(135, 0, 255, 0)'
+              ]
+            }
+          : {}}
+        transition={{
+          boxShadow: {
+            duration: 2,
+            repeat: Infinity,
+            delay: companyIndex * 0.3
+          }
+        }}
+      />
+
+      <motion.div
+        className={`
+          bg-white dark:bg-bg-secondary-dark 
+          p-4 sm:p-6 rounded-lg shadow-md 
+          transition-all duration-300 
+          border-l-4 border-transparent
+          cursor-pointer
+          w-full
+          relative overflow-hidden
+          group
+        `}
+        onClick={onToggle}
+        whileHover={{
+          scale: 1.02,
+          borderLeftColor: '#8700ff',
+          boxShadow: '0 20px 40px rgba(135, 0, 255, 0.1)'
+        }}
+        transition={{ type: 'spring', stiffness: 300 }}
+      >
+        {/* Background gradient overlay */}
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-r from-pink/5 to-light-orange/5 opacity-0"
+          whileHover={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
+        />
+
+        {/* Floating icons background */}
+        <div className="absolute inset-0 pointer-events-none overflow-hidden">
+          {company.experiences[0].techIcons.slice(0, 3).map((Icon: IconType, i: number) => (
+            <TechParticle key={i} delay={i * 0.5} icon={Icon} />
+          ))}
+        </div>
+
+        <div className="relative z-10">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
+            <motion.h2
+              className="text-xl sm:text-2xl font-medium flex items-center flex-wrap"
+              whileHover={{ x: 5 }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              <motion.div
+                whileHover={{ rotate: 360, scale: 1.2 }}
+                transition={{ duration: 0.5 }}
+              >
+                {React.createElement(FaBriefcase as any, { className: 'mr-2 text-pink-hover flex-shrink-0' })}
+              </motion.div>
+              <motion.a
+                href={company.companyWebsite}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:text-pink-hover transition-colors duration-200 break-words"
+                onClick={(e: React.MouseEvent) => { e.stopPropagation() }}
+                whileHover={{ scale: 1.05 }}
+              >
+                {company.companyName}
+              </motion.a>
+            </motion.h2>
+
+            <motion.span
+              className="text-sm font-medium text-pink-hover self-start sm:self-center"
+              animate={{
+                rotate: isExpanded ? 180 : 0,
+                scale: isExpanded ? 1.1 : 1
+              }}
+              transition={{ type: 'spring', stiffness: 300 }}
+            >
+              {isExpanded ? '↑' : '↓'}
+            </motion.span>
+          </div>
+
+          <AnimatePresence>
+            {isExpanded && (
+              <motion.div
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: 'auto', opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                transition={{ duration: 0.5, ease: 'easeInOut' }}
+                className="overflow-hidden mt-4"
+              >
+                <div className="space-y-6 sm:space-y-8">
+                  {company.experiences.map((experience: ExperienceItem, expIndex: number) => (
+                    <motion.div
+                      key={expIndex}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: expIndex * 0.1, duration: 0.5 }}
+                      className={`
+                        p-2 sm:p-4 rounded-lg
+                        ${expIndex !== company.experiences.length - 1 ? 'border-b dark:border-gray-700 pb-6 sm:pb-8' : ''}
+                        relative
+                      `}
+                    >
+                      <div className="w-full">
+                        <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-2 lg:gap-4 mb-4">
+                          <motion.h3
+                            className="text-lg sm:text-xl font-medium sm:pl-4"
+                            whileHover={{ x: 5, color: '#8700ff' }}
+                            transition={{ type: 'spring', stiffness: 300 }}
+                          >
+                            {experience.role}
+                          </motion.h3>
+
+                          <motion.div
+                            className="flex items-center text-xs sm:text-sm opacity-70 sm:pl-4 lg:pl-0"
+                            whileHover={{ scale: 1.05 }}
+                          >
+                            <motion.div
+                              whileHover={{ rotate: 360 }}
+                              transition={{ duration: 0.5 }}
+                            >
+                              {React.createElement(FaCalendar as any, { className: 'mr-1 text-pink-hover flex-shrink-0' })}
+                            </motion.div>
+                            <span className="break-words">{experience.period}</span>
+                          </motion.div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:pl-4">
+                          {experience.technologies.map((tech: string, techIndex: number) => {
+                            const IconComponent = experience.techIcons[techIndex]
+                            return (
+                              <motion.div
+                                key={techIndex}
+                                className={`
+                                  flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-2 
+                                  ${experience.techColors[techIndex]} 
+                                  rounded-full transition-colors duration-200
+                                  text-xs sm:text-sm
+                                  cursor-pointer
+                                `}
+                                whileHover={{
+                                  scale: 1.1,
+                                  rotate: 5,
+                                  boxShadow: '0 5px 15px rgba(135, 0, 255, 0.2)'
+                                }}
+                                whileTap={{ scale: 0.95 }}
+                                transition={{ type: 'spring', stiffness: 400 }}
+                              >
+                                <motion.div
+                                  whileHover={{ rotate: 360 }}
+                                  transition={{ duration: 0.5 }}
+                                >
+                                  {IconComponent != null && React.createElement(IconComponent as any, { className: 'w-3 h-3 sm:w-4 sm:h-4' })}
+                                </motion.div>
+                                <span className="font-medium whitespace-nowrap">{tech}</span>
+                              </motion.div>
+                            )
+                          })}
+                        </div>
+
+                        <div className="pt-4 border-t dark:border-gray-800 space-y-4">
+                          <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.2 }}
+                          >
+                            <div className="flex items-center mb-2">
+                              <motion.span
+                                className="text-lg mr-2"
+                                whileHover={{ scale: 1.2, rotate: 10 }}
+                              >
+                                🇧🇷
+                              </motion.span>
+                              <span className="text-sm font-medium opacity-80">Português</span>
+                            </div>
+                            <motion.p
+                              className="text-sm sm:text-base font-thin opacity-70 leading-relaxed"
+                              whileHover={{ opacity: 0.9 }}
+                            >
+                              {experience.description}
+                            </motion.p>
+                          </motion.div>
+
+                          <motion.div
+                            className="border-t dark:border-gray-800 pt-4"
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: 0.4 }}
+                          >
+                            <div className="flex items-center mb-2">
+                              <motion.span
+                                className="text-lg mr-2"
+                                whileHover={{ scale: 1.2, rotate: -10 }}
+                              >
+                                🇺🇸
+                              </motion.span>
+                              <span className="text-sm font-medium opacity-80">English</span>
+                            </div>
+                            <motion.p
+                              className="text-sm sm:text-base font-thin opacity-70 leading-relaxed"
+                              whileHover={{ opacity: 0.9 }}
+                            >
+                              {experience.descriptionEn}
+                            </motion.p>
+                          </motion.div>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </motion.div>
+    </motion.div>
+  )
+}
+
 export default function Services () {
-  const [expandedExperiences, setExpandedExperiences] = useState<number[]>([0, 1, 2, 3]) // Todas as empresas expandidas por padrão
+  const [expandedExperiences, setExpandedExperiences] = useState<number[]>([0, 1, 2, 3])
+  const { scrollYProgress } = useScroll()
+  const [headerRef, headerInView] = useInView({
+    threshold: 0.5,
+    triggerOnce: true
+  })
 
   const toggleExpand = (index: number) => {
     if (expandedExperiences.includes(index)) {
@@ -110,8 +451,36 @@ export default function Services () {
     return acc
   }, [])
 
+  // Variantes para animação do cabeçalho
+  const headerVariants = {
+    hidden: { opacity: 0, y: -50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 15,
+        staggerChildren: 0.2
+      }
+    }
+  }
+
+  const titleVariants = {
+    hidden: { opacity: 0, scale: 0.8 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: {
+        type: 'spring',
+        stiffness: 150,
+        damping: 10
+      }
+    }
+  }
+
   return (
-    <div
+    <motion.div
       id="third-section"
       className="
         flex
@@ -126,154 +495,100 @@ export default function Services () {
         dark:text-text-primary-dark
         transition-colors
         duration-200
+        relative overflow-hidden
       "
     >
-      <div className="max-w-7xl w-full">
-        <div className="text-center sm:text-left mb-8 sm:mb-10 lg:mb-12">
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-2 sm:mb-3">
-            <span
+      {/* Background Tech Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {[FaReact, FaAngular, FaNodeJs, SiNestjs, FaAws].map((Icon, i) => (
+          <TechParticle key={i} delay={i * 1.5} icon={Icon} />
+        ))}
+      </div>
+
+      {/* Progress bar */}
+      <motion.div
+        className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-pink-hover to-light-orange-hover z-50"
+        style={{ scaleX: scrollYProgress, transformOrigin: '0%' }}
+      />
+
+      <div className="max-w-7xl w-full relative z-10">
+        <motion.div
+          ref={headerRef}
+          className="text-center sm:text-left mb-8 sm:mb-10 lg:mb-12"
+          variants={headerVariants}
+          initial="hidden"
+          animate={headerInView ? 'visible' : 'hidden'}
+        >
+          <motion.h1
+            className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-2 sm:mb-3"
+            variants={titleVariants}
+          >
+            <motion.span
               className="
                 bg-clip-text
                 text-gradient
                 bg-gradient-to-r from-pink-hover to-light-orange-hover
+                inline-block
               "
+              whileHover={{
+                scale: 1.05,
+                filter: 'drop-shadow(0 0 20px rgba(135, 0, 255, 0.6))'
+              }}
             >
               Experiência Profissional
-            </span>
-          </h1>
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-medium opacity-70 sm:ml-10">Professional Experience</h2>
-        </div>
+            </motion.span>
+          </motion.h1>
+
+          <motion.h2
+            className="text-lg sm:text-xl lg:text-2xl font-medium opacity-70 sm:ml-10"
+            variants={titleVariants}
+            whileHover={{ x: 10, opacity: 0.9 }}
+          >
+            Professional Experience
+          </motion.h2>
+        </motion.div>
 
         <div className="relative">
-          {/* Linha do tempo vertical - oculta em mobile */}
-          <div className="hidden md:block absolute left-8 w-px h-full bg-gray-300 dark:bg-gray-700" />
+          {/* Linha do tempo vertical animada */}
+          <div className="hidden md:block relative">
+            <TimelineConnector isVisible={headerInView} />
+          </div>
 
           <div className="space-y-6 sm:space-y-8 lg:space-y-12">
             {groupedExperiences.map((company, companyIndex) => (
-              <div
+              <ExperienceCard
                 key={companyIndex}
-                className="relative md:pl-20"
-              >
-                {/* Marcador da empresa na linha do tempo - apenas desktop */}
-                <div className="hidden md:block absolute left-6 top-6 w-5 h-5 rounded-full bg-gradient-to-r bg-gray-400 dark:bg-gray-600" />
-
-                <div
-                  className={`
-                    bg-white dark:bg-bg-secondary-dark 
-                    p-4 sm:p-6 rounded-lg shadow-md 
-                    transition-all duration-300 
-                    hover:shadow-lg
-                    border-l-4 border-gray-300 dark:border-gray-600
-                    cursor-pointer
-                    w-full
-                  `}
-                  onClick={() => { toggleExpand(companyIndex) }}
-                >
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
-                    <h2 className="text-xl sm:text-2xl font-medium flex items-center flex-wrap">
-                      {React.createElement(FaBriefcase as any, { className: 'mr-2 text-pink-hover flex-shrink-0' })}
-                      <a
-                        href={company.companyWebsite}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="hover:text-pink-hover transition-colors duration-200 break-words"
-                        onClick={(e) => { e.stopPropagation() }}
-                      >
-                        {company.companyName}
-                      </a>
-                    </h2>
-                    <span className="text-sm font-medium text-pink-hover self-start sm:self-center">
-                      {expandedExperiences.includes(companyIndex) ? 'Recolher' : 'Expandir'}
-                    </span>
-                  </div>
-
-                  <div
-                    className={`
-                      overflow-hidden transition-all duration-300 mt-4
-                      ${expandedExperiences.includes(companyIndex) ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}
-                    `}
-                  >
-                    <div className="space-y-6 sm:space-y-8">
-                      {company.experiences.map((experience, expIndex) => (
-                        <div
-                          key={expIndex}
-                          className={`
-                            p-2 sm:p-4 rounded-lg
-                            ${expIndex !== company.experiences.length - 1 ? 'border-b dark:border-gray-700 pb-6 sm:pb-8' : ''}
-                            relative
-                          `}
-                        >
-                          {/* Conectores internos para múltiplas experiências - apenas desktop */}
-                          {expIndex !== company.experiences.length - 1 && (
-                            <div className="hidden sm:block absolute left-0 top-8 h-[calc(100%-2rem)] w-px bg-gray-200 dark:bg-gray-800" />
-                          )}
-
-                          {/* Indicador de experiência - apenas desktop */}
-                          <div className="hidden sm:block absolute left-0 top-8 w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-600 -ml-1" />
-
-                          <div className="w-full">
-                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-2 lg:gap-4 mb-4">
-                              <h3 className="text-lg sm:text-xl font-medium sm:pl-4">
-                                {experience.role}
-                              </h3>
-                              <div className="flex items-center text-xs sm:text-sm opacity-70 sm:pl-4 lg:pl-0">
-                                {React.createElement(FaCalendar as any, { className: 'mr-1 text-pink-hover flex-shrink-0' })}
-                                <span className="break-words">{experience.period}</span>
-                              </div>
-                            </div>
-
-                            <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:pl-4">
-                              {experience.technologies.map((tech, techIndex) => {
-                                const IconComponent = experience.techIcons[techIndex]
-                                return (
-                                  <div
-                                    key={techIndex}
-                                    className={`
-                                      flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-2 
-                                      ${experience.techColors[techIndex]} 
-                                      rounded-full transition-colors duration-200
-                                      text-xs sm:text-sm
-                                    `}
-                                  >
-                                    {React.createElement(IconComponent as any, { className: 'w-3 h-3 sm:w-4 sm:h-4' })}
-                                    <span className="font-medium whitespace-nowrap">{tech}</span>
-                                  </div>
-                                )
-                              })}
-                            </div>
-
-                            <div className="pt-4 border-t dark:border-gray-800 space-y-4">
-                              <div>
-                                <div className="flex items-center mb-2">
-                                  <span className="text-lg mr-2">🇧🇷</span>
-                                  <span className="text-sm font-medium opacity-80">Português</span>
-                                </div>
-                                <p className="text-sm sm:text-base font-thin opacity-70 leading-relaxed">
-                                  {experience.description}
-                                </p>
-                              </div>
-
-                              <div className="border-t dark:border-gray-800 pt-4">
-                                <div className="flex items-center mb-2">
-                                  <span className="text-lg mr-2">🇺🇸</span>
-                                  <span className="text-sm font-medium opacity-80">English</span>
-                                </div>
-                                <p className="text-sm sm:text-base font-thin opacity-70 leading-relaxed">
-                                  {experience.descriptionEn}
-                                </p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
+                company={company}
+                companyIndex={companyIndex}
+                isExpanded={expandedExperiences.includes(companyIndex)}
+                onToggle={() => { toggleExpand(companyIndex) }}
+              />
             ))}
           </div>
         </div>
       </div>
-    </div>
+
+      {/* Floating action button para expandir/recolher tudo */}
+      <motion.button
+        className="fixed bottom-8 right-8 w-14 h-14 bg-gradient-to-r from-pink-hover to-light-orange-hover rounded-full shadow-lg z-40 flex items-center justify-center text-white font-bold"
+        whileHover={{
+          scale: 1.1,
+          boxShadow: '0 10px 30px rgba(135, 0, 255, 0.4)'
+        }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => {
+          if (expandedExperiences.length === groupedExperiences.length) {
+            setExpandedExperiences([])
+          } else {
+            setExpandedExperiences(groupedExperiences.map((_, i) => i))
+          }
+        }}
+        animate={{
+          rotate: expandedExperiences.length === groupedExperiences.length ? 180 : 0
+        }}
+      >
+        ↕️
+      </motion.button>
+    </motion.div>
   )
 }

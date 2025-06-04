@@ -3,7 +3,6 @@
 import './globals.css'
 import { Ubuntu } from '@next/font/google'
 import { ThemeProvider } from '@/contexts/ThemeContext'
-import Script from 'next/script'
 
 const ubuntu = Ubuntu({
   weight: '400',
@@ -18,8 +17,10 @@ export default function RootLayout ({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <Script id="theme-init" strategy="beforeInteractive">
-          {`
+        <script
+          id="theme-init"
+          dangerouslySetInnerHTML={{
+            __html: `
             (function() {
               try {
                 const savedTheme = localStorage.getItem('theme');
@@ -32,8 +33,9 @@ export default function RootLayout ({
                 }
               } catch (e) {}
             })();
-          `}
-        </Script>
+          `
+          }}
+        />
       </head>
       <body className={ubuntu.className}>
         <ThemeProvider>
