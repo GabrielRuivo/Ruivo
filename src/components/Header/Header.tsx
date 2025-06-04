@@ -1,10 +1,10 @@
-"use client";
+'use client'
 
-export default function Header() {
+export default function Header () {
   return (
     <div className="flex py-5 text-white items-center justify-around w-full bg-header dark:bg-header-dark transition-colors duration-200">
       <div>
-        <span className="text-2xl font-semibold">Ruivo</span>
+        <span className="text-2xl font-semibold">Ruivo&apos;s portfolio</span>
         <span className="text-sm font-thin">.com</span>
       </div>
 
@@ -19,18 +19,18 @@ export default function Header() {
       </div>
 
       <div>
-        <button 
+        <button
           className="
-            py-2 
-            px-6 
-            rounded-3xl 
+            py-2
+            px-6
+            rounded-3xl
             duration-1000
-            bg-gradient-to-r from-pink to-light-orange 
+            bg-gradient-to-r from-pink to-light-orange
             hover:bg-gradient-to-r hover:from-pink-hover hover:to-light-orange-hover
           " >
-          <span className="text-black text-sm font-semibold" >LET'S TALK</span>
+          <span className="text-black text-sm font-semibold" >LET&apos;S TALK</span>
         </button>
       </div>
     </div>
-  );
+  )
 }

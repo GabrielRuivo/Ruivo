@@ -1,74 +1,72 @@
-"use client";
+'use client'
 
-import React, { createContext, useContext, useEffect, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react'
 
-type ThemeContextType = {
-  darkMode: boolean;
-  toggleDarkMode: () => void;
-};
+interface ThemeContextType {
+  darkMode: boolean
+  toggleDarkMode: () => void
+}
 
 // Valor padrão do contexto (não mais undefined)
 const ThemeContext = createContext<ThemeContextType>({
   darkMode: false,
-  toggleDarkMode: () => {},
-});
+  toggleDarkMode: () => {}
+})
 
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [darkMode, setDarkMode] = useState(false);
-  const [mounted, setMounted] = useState(false);
+export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
+  const [theme, setTheme] = useState<string>('light')
 
   useEffect(() => {
-    setMounted(true);
     try {
       // Verificar preferência salva no localStorage
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        setDarkMode(true);
-        document.documentElement.classList.add('dark');
+      const savedTheme = localStorage.getItem('theme')
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+
+      if (savedTheme === 'dark' || (savedTheme === null && prefersDark)) {
+        setTheme('dark')
+        document.documentElement.classList.add('dark')
       } else {
-        setDarkMode(false);
-        document.documentElement.classList.remove('dark');
+        setTheme('light')
+        document.documentElement.classList.remove('dark')
       }
     } catch (error) {
-      console.error('Error accessing localStorage:', error);
+      console.error('Error accessing localStorage:', error)
     }
-  }, []);
+  }, [])
 
-  const toggleDarkMode = () => {
+  const toggleTheme = () => {
     try {
-      setDarkMode((prev) => {
-        const newValue = !prev;
-        
-        if (newValue) {
-          document.documentElement.classList.add('dark');
-          localStorage.setItem('theme', 'dark');
+      setTheme((prev) => {
+        const newValue = prev === 'dark' ? 'light' : 'dark'
+
+        if (newValue === 'dark') {
+          document.documentElement.classList.add('dark')
+          localStorage.setItem('theme', 'dark')
         } else {
-          document.documentElement.classList.remove('dark');
-          localStorage.setItem('theme', 'light');
+          document.documentElement.classList.remove('dark')
+          localStorage.setItem('theme', 'light')
         }
-        
-        return newValue;
-      });
+
+        return newValue
+      })
     } catch (error) {
-      console.error('Error accessing localStorage:', error);
+      console.error('Error accessing localStorage:', error)
     }
-  };
+  }
 
   // Criar um objeto de valor de contexto
   const contextValue = {
-    darkMode,
-    toggleDarkMode
-  };
+    darkMode: theme === 'dark',
+    toggleDarkMode: toggleTheme
+  }
 
   return (
     <ThemeContext.Provider value={contextValue}>
       {children}
     </ThemeContext.Provider>
-  );
+  )
 }
 
-export function useTheme() {
-  return useContext(ThemeContext);
-} 
+export function useTheme () {
+  return useContext(ThemeContext)
+}

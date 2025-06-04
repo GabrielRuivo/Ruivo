@@ -1,10 +1,10 @@
-"use client"; // this is a client component 👈🏽
-import Experiences from "@/components/Experiences/Experiences";
+'use client' // this is a client component 👈🏽
+import Experiences from '@/components/Experiences/Experiences'
 // import Header from "@/components/Header/Header";
-import Land from "@/pages/Land/Land";
-import Services from "@/pages/Services/Services";
+import Land from '@/pages/Land/Land'
+import Services from '@/pages/Services/Services'
 
-export default function Home() {
+export default function Home () {
   return (
     <div className="overflow-hidden">
       {/* <Header /> */}
@@ -12,5 +12,5 @@ export default function Home() {
       <Experiences />
       <Services />
     </div>
-  );
+  )
 }

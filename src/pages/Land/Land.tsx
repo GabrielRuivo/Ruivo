@@ -1,7 +1,7 @@
-import styles from './Land.module.css';
-import ThemeToggle from '@/components/ThemeToggle/ThemeToggle';
+import styles from './Land.module.css'
+import ThemeToggle from '@/components/ThemeToggle/ThemeToggle'
 
-export default function Land() {
+export default function Land () {
   return (
       <div id="first-section" className="flex flex-col w-full items-center justify-center min-h-screen py-8 bg-primary dark:bg-bg-primary-dark dark:text-text-primary-dark transition-colors duration-200">
         <div className='flex flex-col md:flex-row max-w-7xl w-full px-4 md:px-6 lg:px-8'>
@@ -12,12 +12,12 @@ export default function Land() {
                 <span
                   className="
                     bg-clip-text
-                    text-gradient 
+                    text-gradient
                     ml-2 md:ml-4
                     bg-gradient-to-r from-pink-hover to-light-orange-hover
                   "
                 >
-                  I'm Ruivo,
+                  I&apos;m Ruivo,
                 </span>
               </div>
 
@@ -31,23 +31,23 @@ export default function Land() {
             </div>
 
             <div className="flex flex-wrap gap-4 justify-center md:justify-start">
-              <button 
+              <button
                 className="
-                  py-2 
-                  px-6 
-                  rounded-3xl 
-                  bg-gradient-to-r from-pink to-light-orange 
+                  py-2
+                  px-6
+                  rounded-3xl
+                  bg-gradient-to-r from-pink to-light-orange
                   hover:bg-gradient-to-r hover:from-pink-hover hover:to-light-orange-hover
                 " >
-                <a href="https://wa.me/5543991312390" className="text-black text-sm font-semibold">LET'S TALK</a>
+                <a href="https://wa.me/5543991312390" className="text-black text-sm font-semibold">LET&apos;S TALK</a>
               </button>
 
-              <button 
+              <button
                 className="
-                  py-2 
-                  px-6 
-                  rounded-3xl 
-                  border	
+                  py-2
+                  px-6
+                  rounded-3xl
+                  border
                   hover:bg-bg-primary
                   dark:hover:bg-bg-secondary-dark
                   dark:text-white
@@ -66,5 +66,5 @@ export default function Land() {
           </div>
         </div>
       </div>
-  );
+  )
 }

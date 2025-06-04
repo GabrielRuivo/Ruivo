@@ -1,4 +1,4 @@
-"use client";
+'use client'
 
 import './globals.css'
 import { Ubuntu } from '@next/font/google'
@@ -7,11 +7,11 @@ import Script from 'next/script'
 
 const ubuntu = Ubuntu({
   weight: '400',
-  subsets: ['latin'],
+  subsets: ['latin']
 })
 
-export default function RootLayout({
-  children,
+export default function RootLayout ({
+  children
 }: {
   children: React.ReactNode
 }) {

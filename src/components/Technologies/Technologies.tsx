@@ -1,23 +1,23 @@
-import Image from "next/image";
+import Image from 'next/image'
 
-export default function Technologies(
-  { 
-    srcImage, 
-    techName 
-  }: { 
-    srcImage: string, 
-    techName: string 
+export default function Technologies (
+  {
+    srcImage,
+    techName
+  }: {
+    srcImage: string
+    techName: string
   }
 ) {
   return (
     <div className='flex items-center'>
       <div className="text-3xl py-5">{techName}</div>
-      <Image 
+      <Image
         className='ml-2'
-        src={srcImage} 
-        height={30} 
-        width={30} 
-        alt={techName + 'Icon'} 
+        src={srcImage}
+        height={30}
+        width={30}
+        alt={techName + 'Icon'}
       />
     </div>
   )
