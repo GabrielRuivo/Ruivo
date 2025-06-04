@@ -11,7 +11,7 @@ export default function Services() {
 
   const toggleExpand = (index: number) => {
     if (expandedExperiences.includes(index)) {
-      setExpandedExperiences(expandedExperiences.filter(i => i !== index));
+      setExpandedExperiences(expandedExperiences.filter((i: number) => i !== index));
     } else {
       setExpandedExperiences([...expandedExperiences, index]);
     }
@@ -119,7 +119,8 @@ export default function Services() {
         items-center 
         w-full 
         min-h-screen 
-        py-16
+        py-8 sm:py-12 lg:py-16
+        px-4 sm:px-6 lg:px-8
         bg-bg-primary
         dark:bg-bg-primary-dark
         dark:text-text-primary-dark
@@ -127,59 +128,61 @@ export default function Services() {
         duration-200
       "
     >
-      <div className="max-w-7xl w-full px-8">
-        <h1 className="text-4xl font-semibold mb-3">
-          <span
-            className="
-              bg-clip-text
-              text-gradient 
-              bg-gradient-to-r from-pink-hover to-light-orange-hover
-            "
-          >
-            Experiência Profissional
-          </span>
-        </h1>
-        <h2 className="text-2xl font-medium mb-10 opacity-70 ml-10">Professional Experience</h2>
+      <div className="max-w-7xl w-full">
+        <div className="text-center sm:text-left mb-8 sm:mb-10 lg:mb-12">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold mb-2 sm:mb-3">
+            <span
+              className="
+                bg-clip-text
+                text-gradient 
+                bg-gradient-to-r from-pink-hover to-light-orange-hover
+              "
+            >
+              Experiência Profissional
+            </span>
+          </h1>
+          <h2 className="text-lg sm:text-xl lg:text-2xl font-medium opacity-70 sm:ml-10">Professional Experience</h2>
+        </div>
 
-        <div className="relative timeline-container">
-          {/* Linha do tempo vertical */}
-          <div className="absolute left-0 md:left-[15%] w-px h-full bg-gray-300 dark:bg-gray-700 timeline-line" />
+        <div className="relative">
+          {/* Linha do tempo vertical - oculta em mobile */}
+          <div className="hidden md:block absolute left-8 w-px h-full bg-gray-300 dark:bg-gray-700" />
 
-          <div className="space-y-12 relative">
+          <div className="space-y-6 sm:space-y-8 lg:space-y-12">
             {groupedExperiences.map((company, companyIndex) => (
               <div 
                 key={companyIndex}
-                className="relative pl-8 md:pl-[calc(15%+2rem)]"
+                className="relative md:pl-20"
               >
-                {/* Marcador da empresa na linha do tempo */}
-                <div 
-                  className={`absolute left-[-10px] md:left-[15%] w-5 h-5 rounded-full bg-gradient-to-r ${company.companyColor} translate-x-[-50%] z-10`}
-                />
+                {/* Marcador da empresa na linha do tempo - apenas desktop */}
+                <div className="hidden md:block absolute left-6 top-6 w-5 h-5 rounded-full bg-gradient-to-r bg-gray-400 dark:bg-gray-600" />
 
                 <div 
                   className={`
                     bg-white dark:bg-bg-secondary-dark 
-                    p-6 rounded-lg shadow-md 
+                    p-4 sm:p-6 rounded-lg shadow-md 
                     transition-all duration-300 
                     hover:shadow-lg
-                    border-l-4 bg-gradient-to-r ${company.companyColor} border-opacity-50
+                    border-l-4 border-gray-300 dark:border-gray-600
                     cursor-pointer
+                    w-full
                   `}
                   onClick={() => toggleExpand(companyIndex)}
                 >
-                  <div className="flex justify-between items-center">
-                    <h2 className="text-2xl font-medium flex items-center">
-                      {FaBriefcase({ className: "mr-2 text-pink-hover" })}
+                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 sm:gap-4">
+                    <h2 className="text-xl sm:text-2xl font-medium flex items-center flex-wrap">
+                      <FaBriefcase className="mr-2 text-pink-hover flex-shrink-0" />
                       <a 
                         href={company.companyWebsite} 
                         target="_blank" 
                         rel="noopener noreferrer" 
-                        className="hover:text-pink-hover transition-colors duration-200"
+                        className="hover:text-pink-hover transition-colors duration-200 break-words"
+                        onClick={(e) => e.stopPropagation()}
                       >
                         {company.companyName}
                       </a>
                     </h2>
-                    <span className="text-sm font-medium text-pink-hover">
+                    <span className="text-sm font-medium text-pink-hover self-start sm:self-center">
                       {expandedExperiences.includes(companyIndex) ? 'Recolher' : 'Expandir'}
                     </span>
                   </div>
@@ -187,62 +190,78 @@ export default function Services() {
                   <div 
                     className={`
                       overflow-hidden transition-all duration-300 mt-4
-                      ${expandedExperiences.includes(companyIndex) ? 'max-h-[2000px]' : 'max-h-0'}
+                      ${expandedExperiences.includes(companyIndex) ? 'max-h-[5000px] opacity-100' : 'max-h-0 opacity-0'}
                     `}
                   >
-                    <div className="space-y-8">
+                    <div className="space-y-6 sm:space-y-8">
                       {company.experiences.map((experience, expIndex) => (
                         <div 
                           key={expIndex}
                           className={`
-                            p-4 rounded-lg
-                            ${expIndex !== company.experiences.length - 1 ? 'border-b dark:border-gray-700 pb-8' : ''}
+                            p-2 sm:p-4 rounded-lg
+                            ${expIndex !== company.experiences.length - 1 ? 'border-b dark:border-gray-700 pb-6 sm:pb-8' : ''}
                             relative
                           `}
                         >
-                          {/* Conectores internos para múltiplas experiências */}
+                          {/* Conectores internos para múltiplas experiências - apenas desktop */}
                           {expIndex !== company.experiences.length - 1 && (
-                            <div className="absolute left-0 top-8 h-[calc(100%-2rem)] w-px bg-gray-200 dark:bg-gray-800" />
+                            <div className="hidden sm:block absolute left-0 top-8 h-[calc(100%-2rem)] w-px bg-gray-200 dark:bg-gray-800" />
                           )}
                           
-                          {/* Indicador de experiência */}
-                          <div className="absolute left-0 top-8 w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-600 -ml-1" />
+                          {/* Indicador de experiência - apenas desktop */}
+                          <div className="hidden sm:block absolute left-0 top-8 w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-600 -ml-1" />
 
-                          <div>
-                            <div className="flex justify-between items-start">
-                              <h3 className="text-xl font-medium mb-2 pl-4">
+                          <div className="w-full">
+                            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-2 lg:gap-4 mb-4">
+                              <h3 className="text-lg sm:text-xl font-medium sm:pl-4">
                                 {experience.role}
                               </h3>
-                              <div className="flex items-center text-sm opacity-70">
-                                {FaCalendar({ className: "mr-1 text-pink-hover" })}
-                                <span>{experience.period}</span>
+                              <div className="flex items-center text-xs sm:text-sm opacity-70 sm:pl-4 lg:pl-0">
+                                <FaCalendar className="mr-1 text-pink-hover flex-shrink-0" />
+                                <span className="break-words">{experience.period}</span>
                               </div>
                             </div>
                             
-                            <div className="flex flex-wrap gap-3 mb-4 pl-4">
+                            <div className="flex flex-wrap gap-2 sm:gap-3 mb-4 sm:pl-4">
                               {experience.technologies.map((tech, techIndex) => {
                                 const IconComponent = experience.techIcons[techIndex];
                                 return (
                                   <div 
                                     key={techIndex} 
-                                    className={`flex items-center gap-1 px-3 py-2 ${experience.techColors[techIndex]} rounded-full transition-colors duration-200`}
+                                    className={`
+                                      flex items-center gap-1 px-2 py-1 sm:px-3 sm:py-2 
+                                      ${experience.techColors[techIndex]} 
+                                      rounded-full transition-colors duration-200
+                                      text-xs sm:text-sm
+                                    `}
                                   >
-                                    {IconComponent && IconComponent({ className: "mr-1" })}
-                                    <span className="text-sm font-medium">{tech}</span>
+                                    {IconComponent && <IconComponent className="w-3 h-3 sm:w-4 sm:h-4" />}
+                                    <span className="font-medium whitespace-nowrap">{tech}</span>
                                   </div>
                                 );
                               })}
                             </div>
                             
-                            <div className={`
-                              pt-4 border-t dark:border-gray-800
-                            `}>
-                              <p className="text-base font-thin opacity-70">
-                                🇧🇷 {experience.description}
-                              </p>
-                              <p className="text-base font-thin opacity-70 mt-4 border-t dark:border-gray-800 pt-4">
-                                🇺🇸 {experience.descriptionEn}
-                              </p>
+                            <div className="pt-4 border-t dark:border-gray-800 space-y-4">
+                              <div>
+                                <div className="flex items-center mb-2">
+                                  <span className="text-lg mr-2">🇧🇷</span>
+                                  <span className="text-sm font-medium opacity-80">Português</span>
+                                </div>
+                                <p className="text-sm sm:text-base font-thin opacity-70 leading-relaxed">
+                                  {experience.description}
+                                </p>
+                              </div>
+                              
+                              <div className="border-t dark:border-gray-800 pt-4">
+                                <div className="flex items-center mb-2">
+                                  <span className="text-lg mr-2">🇺🇸</span>
+                                  <span className="text-sm font-medium opacity-80">English</span>
+                                </div>
+                                <p className="text-sm sm:text-base font-thin opacity-70 leading-relaxed">
+                                  {experience.descriptionEn}
+                                </p>
+                              </div>
                             </div>
                           </div>
                         </div>
