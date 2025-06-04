@@ -108,6 +108,82 @@ export default function ThemeToggle() {
             {darkMode
               ? (
                 <motion.div
+                  key="moon"
+                  variants={iconVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  className="absolute inset-0"
+                >
+                  {/* Lua com efeito de brilho */}
+                  <motion.svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-5 h-5 text-blue-400"
+                    animate={{
+                      rotate: [0, 10, 0, -10, 0],
+                      scale: [1, 1.05, 1]
+                    }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: 'easeInOut'
+                    }}
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
+                      clipRule="evenodd"
+                    />
+                  </motion.svg>
+
+                  {/* Estrelas ao redor da lua */}
+                  {[...Array(8)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute text-yellow-300"
+                      style={{
+                        left: `${10 + Math.random() * 80}%`,
+                        top: `${10 + Math.random() * 80}%`,
+                        fontSize: '4px'
+                      }}
+                      animate={{
+                        opacity: [0, 1, 0],
+                        scale: [0, 1, 0],
+                        rotate: [0, 180, 360]
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        delay: i * 0.4,
+                        ease: 'easeInOut'
+                      }}
+                    >
+                      ✦
+                    </motion.div>
+                  ))}
+
+                  {/* Efeito de brilho da lua */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full"
+                    animate={{
+                      boxShadow: [
+                        '0 0 5px rgba(59, 130, 246, 0.3)',
+                        '0 0 20px rgba(59, 130, 246, 0.6)',
+                        '0 0 5px rgba(59, 130, 246, 0.3)'
+                      ]
+                    }}
+                    transition={{
+                      duration: 3,
+                      repeat: Infinity,
+                      ease: 'easeInOut'
+                    }}
+                  />
+                </motion.div>
+              )
+              : (
+                <motion.div
                   key="sun"
                   variants={iconVariants}
                   initial="initial"
@@ -189,82 +265,6 @@ export default function ThemeToggle() {
                       }}
                     />
                   ))}
-                </motion.div>
-              )
-              : (
-                <motion.div
-                  key="moon"
-                  variants={iconVariants}
-                  initial="initial"
-                  animate="animate"
-                  exit="exit"
-                  className="absolute inset-0"
-                >
-                  {/* Lua com efeito de brilho */}
-                  <motion.svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
-                    className="w-5 h-5 text-blue-400"
-                    animate={{
-                      rotate: [0, 10, 0, -10, 0],
-                      scale: [1, 1.05, 1]
-                    }}
-                    transition={{
-                      duration: 4,
-                      repeat: Infinity,
-                      ease: 'easeInOut'
-                    }}
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"
-                      clipRule="evenodd"
-                    />
-                  </motion.svg>
-
-                  {/* Estrelas ao redor da lua */}
-                  {[...Array(8)].map((_, i) => (
-                    <motion.div
-                      key={i}
-                      className="absolute text-yellow-300"
-                      style={{
-                        left: `${10 + Math.random() * 80}%`,
-                        top: `${10 + Math.random() * 80}%`,
-                        fontSize: '4px'
-                      }}
-                      animate={{
-                        opacity: [0, 1, 0],
-                        scale: [0, 1, 0],
-                        rotate: [0, 180, 360]
-                      }}
-                      transition={{
-                        duration: 3,
-                        repeat: Infinity,
-                        delay: i * 0.4,
-                        ease: 'easeInOut'
-                      }}
-                    >
-                      ✦
-                    </motion.div>
-                  ))}
-
-                  {/* Efeito de brilho da lua */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full"
-                    animate={{
-                      boxShadow: [
-                        '0 0 5px rgba(59, 130, 246, 0.3)',
-                        '0 0 20px rgba(59, 130, 246, 0.6)',
-                        '0 0 5px rgba(59, 130, 246, 0.3)'
-                      ]
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: 'easeInOut'
-                    }}
-                  />
                 </motion.div>
               )
             }
